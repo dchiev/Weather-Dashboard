@@ -1,0 +1,14 @@
+h2 {
+    text-align: center;
+}
+
+header {
+    padding-top: 20px;
+    border-bottom: 5px solid grey;
+    
+}
+
+
+.weather-contents {
+    padding-top: 20px;
+}
