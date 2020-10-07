@@ -1,8 +1,10 @@
 var userSearch = ""
 var searchTerm = $("#city-search")
 var searchButton = $("button")
-var fiveDay = $("#fiveDay")
+var fiveDay = $("#five-day")
 var cityData = $("#city-data")
+
+
 
 
 searchButton.on("click",function(event){
@@ -14,6 +16,7 @@ searchButton.on("click",function(event){
     
     
   var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + userSearch + "&appid=485317cd57c3e86e686cb63f938bd3c6"
+  var queryURLForecast = "https://api.openweathermap.org/data/2.5/forecast?q=" + userSearch + "&appid=485317cd57c3e86e686cb63f938bd3c6";
   $.ajax({
     url: queryURL,
     method: "GET"
@@ -33,25 +36,106 @@ searchButton.on("click",function(event){
     var day = dateObj.getUTCDate();
     var year = dateObj.getUTCFullYear();
 
-    newDate = "  "          + month + "/" + day + "/" + year;
+    
+    var newDate = "  " + month + "/" + day + "/" + year;
 
     console.log(newDate);
 
-    newCity.append(newDate)
+    newCity.append(newDate);
 
-    // weather image COMING SOON
+    // weather image 
+    var currentWeather = response.weather[0].main;
 
-    // Temperature 
-    var finalTemp = (response.main.temp - 273.15) * 1.80 + 32
-    console.log(finalTemp)
-    var newTemp = $("<h4>")
-    newTemp.text("Temperature: " + finalTemp)
-    newDate.append(newTemp);
+    if (currentWeather === "Clouds" ){
+      var weatherImage = $("<img>").attr("src", "./openweathermap-api-icons-master/icons/04d.png");
+      weatherImage.attr("style", "height: 50px; width: 50px");
+      $("#weather-image").html(weatherImage);
+    }
+
+    else if (currentWeather === "Rain" ){
+      var weatherImage = $("<img>").attr("src", "./openweathermap-api-icons-master/icons/10d.png");
+      weatherImage.attr("style", "height: 50px; width: 50px");
+      $("#weather-image").html(weatherImage);
+    }
+
+    else if (currentWeather === "Drizle" ){
+      var weatherImage = $("<img>").attr("src", "./openweathermap-api-icons-master/icons/09d.png");
+      weatherImage.attr("style", "height: 50px; width: 50px");
+      $("#weather-image").html(weatherImage);
+    }
+
+    else if (currentWeather === "Clear" ){
+      var weatherImage = $("<img>").attr("src", "./openweathermap-api-icons-master/icons/01d.png");
+      weatherImage.attr("style", "height: 50px; width: 50px");
+      $("#weather-image").html(weatherImage);
+    }
+
     
+    // Temperature 
+    var finalTemp = Math.floor (response.main.temp - 273.15) * 1.80 + 32
+    console.log(finalTemp);
+    var newTemp = $("<h4>");
+    newTemp.text("Temperature: " + finalTemp + " F");
+    cityData.append(newTemp);
+
+    // Humidity
+
+    var newHumidity = $("<h4>");
+    newHumidity.text("Humidity: " + response.main.humidity);
+    newTemp.append(newHumidity);
+
+    // Wind Speed 
+
+    var newWind = $("<h4>");
+    newWind.text("Wind Speed: " + response.wind.speed + " MPH");
+    newHumidity.append(newWind);
+
+    // UV Index
 
 
+  // Five Day Forecast
+  $.ajax({
+    url: queryURLForecast,
+    method: "GET"
+  }).then(function(response) {
 
+    console.log(response);
+    var fiveDayArr = response.list;
+    for (let i = 0; i < 5; i ++) {
+      console.log(i)
+    
   
+    var newFiveDayTemp = $("<h6>").text("Temperature: " + (Math.floor (fiveDayArr[i].main.temp - 273.15) * 1.80 + 32) + " F");
+    var newFiveDayWind = $("<h6>").text("Wind Speed " + fiveDayArr[i].wind.speed);
+    var newFiveDayHumidity = $("<h6>").text("Humidity: " + fiveDayArr[i].main.humidity);
+
+    var fiveDayWeather = fiveDayArr[i].weather[0].main;
+
+    if (fiveDayWeather === "Clouds" ){
+      var fiveDayWeatherImage = $("<img>").attr("src", "./openweathermap-api-icons-master/icons/04d.png");
+      fiveDayWeatherImage.attr("style", "height: 50px; width: 50px");
+    }
+
+    else if (fiveDayWeather === "Rain" ){
+      var fiveDayWeatherImage = $("<img>").attr("src", "./openweathermap-api-icons-master/icons/10d.png");
+      fiveDayWeatherImage.attr("style", "height: 50px; width: 50px");
+    }
+
+    else if (fiveDayWeather === "Drizle" ){
+      var fiveDayWeatherImage = $("<img>").attr("src", "./openweathermap-api-icons-master/icons/09d.png");
+      fiveDayWeatherImage.attr("style", "height: 50px; width: 50px");
+    }
+
+    else if (fiveDayWeather === "Clear" ){
+      var fiveDayWeatherImage = $("<img>").attr("src", "./openweathermap-api-icons-master/icons/01d.png");
+      fiveDayWeatherImage.attr("style", "height: 50px; width: 50px");
+    }
 
 
-  })});
+      fiveDay.append(fiveDayWeatherImage)
+      fiveDay.append(newFiveDayTemp);
+      fiveDay.append(newFiveDayWind);
+      fiveDay.append(newFiveDayHumidity);
+    }
+
+  })})});
