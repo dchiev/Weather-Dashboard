@@ -91,6 +91,18 @@ searchButton.on("click",function(event){
     newHumidity.append(newWind);
 
     // UV Index
+    var latitude = response.coord.lat;
+    var longitude = response.coord.lon;
+    var queryURLuv = "https://api.openweathermap.org/data/2.5/uvi?&appid=485317cd57c3e86e686cb63f938bd3c6&lat=" + latitude  + "&lon=" + longitude;
+
+        $.ajax({
+            url: queryURLuv,
+            method: 'GET'
+        }).then(function (response) {
+            var uvData = $("<h4>").text("UV Index: " + response.value);
+          newWind.append(uvData);
+       
+    });
 
 
   // Five Day Forecast
@@ -105,9 +117,9 @@ searchButton.on("click",function(event){
       console.log(i)
     
   
-    var newFiveDayTemp = $("<h6>").text("Temperature: " + (Math.floor (fiveDayArr[i].main.temp - 273.15) * 1.80 + 32) + " F");
-    var newFiveDayWind = $("<h6>").text("Wind Speed " + fiveDayArr[i].wind.speed);
-    var newFiveDayHumidity = $("<h6>").text("Humidity: " + fiveDayArr[i].main.humidity);
+    var newFiveDayTemp = $("<div class='col'>").text("Temperature: " + (Math.floor (fiveDayArr[i].main.temp - 273.15) * 1.80 + 32) + " F");
+    var newFiveDayWind = $("<div class='col'>").text("Wind Speed " + fiveDayArr[i].wind.speed);
+    var newFiveDayHumidity = $("<div class='col'>").text("Humidity: " + fiveDayArr[i].main.humidity);
 
     var fiveDayWeather = fiveDayArr[i].weather[0].main;
 
@@ -131,11 +143,16 @@ searchButton.on("click",function(event){
       fiveDayWeatherImage.attr("style", "height: 50px; width: 50px");
     }
 
-
+    $("#fiveday").append(fiveDayWeatherImage);
+    $("#fiveday").append(newFiveDayTemp);
+    $("#fiveday").append(newFiveDayWind);
+    $("#fiveday").append(newFiveDayHumidity);
+    
+/* 
       fiveDay.append(fiveDayWeatherImage)
       fiveDay.append(newFiveDayTemp);
       fiveDay.append(newFiveDayWind);
-      fiveDay.append(newFiveDayHumidity);
+      fiveDay.append(newFiveDayHumidity); */
     }
 
   })})});
