@@ -11,4 +11,31 @@ header {
 
 .weather-contents {
     padding-top: 20px;
+    background-color: grey;
+    border-radius: 25px;
+}
+
+.forecast-div {
+    padding-top: 60px;
+    
+}
+
+#five-day {
+    background-color: rgb(73, 72, 72);
+    border-radius: 25px;
+}
+
+.uv-index {
+    background-color: red;
+    width: 15%;
+}
+
+.fiveDayForecast {
+   
+    padding: 10px;
+}
+
+.fiveDayImage {
+    background-color:  rgb(73, 72, 72
+    );
 }

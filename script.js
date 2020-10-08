@@ -1,17 +1,26 @@
-var userSearch = ""
-var searchTerm = $("#city-search")
-var searchButton = $("button")
-var fiveDay = $("#five-day")
-var cityData = $("#city-data")
+var userSearch = "";
+var searchTerm = $("#city-search");
+var searchButton = $("button");
+var fiveDay = $("#five-day");
+var cityData = $("#city-data");
+var searchHistory = $(".search-history");
 
 
 
-
+// Search call 
 searchButton.on("click",function(event){
 
     userSearch = searchTerm.val();
 
     console.log(userSearch);
+    var userSearchArray = [];
+    userSearchArray.push(userSearch)
+    localStorage.setItem("userSearch", JSON.stringify(userSearchArray))
+
+
+    var lastSearch = JSON.parse(localStorage.getItem("userSearch"))
+    var listSearch = $("<button>").text(lastSearch)
+    $(".fa-search").append(listSearch)
     // API request for OpenWeather API
     
     
@@ -99,7 +108,7 @@ searchButton.on("click",function(event){
             url: queryURLuv,
             method: 'GET'
         }).then(function (response) {
-            var uvData = $("<h4>").text("UV Index: " + response.value);
+            var uvData = $("<h4 class= 'uv-index'>").text("UV Index: " + response.value);
           newWind.append(uvData);
        
     });
@@ -117,42 +126,42 @@ searchButton.on("click",function(event){
       console.log(i)
     
   
-    var newFiveDayTemp = $("<div class='col'>").text("Temperature: " + (Math.floor (fiveDayArr[i].main.temp - 273.15) * 1.80 + 32) + " F");
-    var newFiveDayWind = $("<div class='col'>").text("Wind Speed " + fiveDayArr[i].wind.speed);
-    var newFiveDayHumidity = $("<div class='col'>").text("Humidity: " + fiveDayArr[i].main.humidity);
+    var newFiveDayTemp = $("<div class='col fiveDayForecast'>").text("Temperature: " + (Math.floor (fiveDayArr[i].main.temp - 273.15) * 1.80 + 32) + " F");
+    var newFiveDayWind = $("<div class='col fiveDayForecast'>").text("Wind Speed " + fiveDayArr[i].wind.speed);
+    var newFiveDayHumidity = $("<div class='col fiveDayForecast'>").text("Humidity: " + fiveDayArr[i].main.humidity);
 
     var fiveDayWeather = fiveDayArr[i].weather[0].main;
 
     if (fiveDayWeather === "Clouds" ){
-      var fiveDayWeatherImage = $("<img>").attr("src", "./openweathermap-api-icons-master/icons/04d.png");
+      var fiveDayWeatherImage = $("<img class = 'fiveDayImage'>").attr("src", "./openweathermap-api-icons-master/icons/04d.png");
       fiveDayWeatherImage.attr("style", "height: 50px; width: 50px");
     }
 
     else if (fiveDayWeather === "Rain" ){
-      var fiveDayWeatherImage = $("<img>").attr("src", "./openweathermap-api-icons-master/icons/10d.png");
+      var fiveDayWeatherImage = $("<img class = 'fiveDayImage'>").attr("src", "./openweathermap-api-icons-master/icons/10d.png");
       fiveDayWeatherImage.attr("style", "height: 50px; width: 50px");
     }
 
     else if (fiveDayWeather === "Drizle" ){
-      var fiveDayWeatherImage = $("<img>").attr("src", "./openweathermap-api-icons-master/icons/09d.png");
+      var fiveDayWeatherImage = $("<img class = 'fiveDayImage'>").attr("src", "./openweathermap-api-icons-master/icons/09d.png");
       fiveDayWeatherImage.attr("style", "height: 50px; width: 50px");
     }
 
     else if (fiveDayWeather === "Clear" ){
-      var fiveDayWeatherImage = $("<img>").attr("src", "./openweathermap-api-icons-master/icons/01d.png");
+      var fiveDayWeatherImage = $("<img class = 'fiveDayImage'>").attr("src", "./openweathermap-api-icons-master/icons/01d.png");
       fiveDayWeatherImage.attr("style", "height: 50px; width: 50px");
     }
 
-    $("#fiveday").append(fiveDayWeatherImage);
-    $("#fiveday").append(newFiveDayTemp);
-    $("#fiveday").append(newFiveDayWind);
-    $("#fiveday").append(newFiveDayHumidity);
-    
-/* 
+
       fiveDay.append(fiveDayWeatherImage)
       fiveDay.append(newFiveDayTemp);
       fiveDay.append(newFiveDayWind);
-      fiveDay.append(newFiveDayHumidity); */
+      fiveDay.append(newFiveDayHumidity); 
     }
 
+
+    
+
+
+  
   })})});
